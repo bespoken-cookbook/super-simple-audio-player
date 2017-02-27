@@ -58,7 +58,7 @@ sudo npm install bespoken-tools -g
 
 Once bespoken-tools are installed, go to a terminal window and enter the directory where you cloned this project. Type there:
 ```
-bst proxy lambda index.js
+bst proxy lambda index.js --verbose
 ```
 
 It should print out something like this:
@@ -85,7 +85,7 @@ On the Skill Testing page, make sure to toggle the button at the top to `Enabled
 ## Quick Confirmation
 To ensure everything is working correctly, make sure that your bst proxy is running:
 ```
-bst proxy lambda index.js
+bst proxy lambda index.js --verbose
 ```
 (Again, this should be run from the directory where you cloned the project, such as /Users/jpk/dev/super-simple-audio-player)
 
