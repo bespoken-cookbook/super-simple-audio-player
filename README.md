@@ -13,21 +13,31 @@ npm install bespoken-tools -g
 ```
 
 ## Setting Up The Alexa Skill
-Go to the Alexa Skills List on Amazon Developer console:
-https://developer.amazon.com/edw/home.html#/skills/list
+There are a number of steps to this.
 
-Select "Add A New Skill" on the top-right.
+For a detailed walk-through, just [follow this guide](https://github.com/bespoken/super-simple-audio-player/blob/master/docs/skill_setup.md).
 
-Provide the Skill Information:
-Skill Type is Custom Interaction Model
-Name is Simple Audio Player
-Invocation Name is simple player
+## Testing With The Service Simulator
+To ensure everything is working correctly, make sure that your bst proxy is running:
+```
+bst proxy lambda index.js
+```
+(Again, this should be run from the directory where you cloned the project, such as /Users/jpk/dev/super-simple-audio-player)
 
-It should look like this:
+Then on the "Test" section, go to the **Service Simulator** section at the bottom and type `Play`. Then click the `Ask Super Simple Player` button. It should return output like below:
 
-![Skill Information](https://octodex.github.com/images/yaktocat.png)
+![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillServiceSimulator.png)
 
-Select "Next". Now we setup the Interaction Model. To do this,
-cut and paste the contents of speechAssets/IntentSchema.json into the top dialog:
+## Testing With An Echo Device
+Again, make sure that your bst proxy is running:
+```
+bst proxy lambda index.js
+```
 
-Then cut and paste the contents of speechAssets/SampleUtterances.txt into the bottom dialog:
+Then just talk to your Echo device - say something like:
+```
+Alexa, tell Simple Player to Play
+```
+
+You should also be able to interact with it saying "Alexa Pause" and "Alexa Resume".
+

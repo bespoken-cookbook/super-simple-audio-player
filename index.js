@@ -19,7 +19,7 @@ var SimplePlayer = function (event, context) {
 // Handles an incoming Alexa request
 SimplePlayer.prototype.handle = function () {
     var requestType = this.event.request.type;
-    var userId = this.event.context.System.user.userId;
+    var userId = this.event.context ? this.event.context.System.user.userId : this.event.session.user.userId;
     var response = null;
 
     // On launch, we tell the user what they can do (Play audio :-))
