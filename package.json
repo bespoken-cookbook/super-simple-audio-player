@@ -1,0 +1,20 @@
+{
+  "name": "super-simple-audio-player",
+  "version": "0.1.0",
+  "description": "A really simple project to get started with the AudioPlayer for Alexa",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*Test.js"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "audio player"
+  ],
+  "author": "Bespoken",
+  "license": "See license in LICENSE.txt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bespoken/super-simple-audio-player"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "Play"
+    },
+    {
+      "intent": "AMAZON.PauseIntent"
+    },
+    {
+      "intent": "AMAZON.ResumeIntent"
+    }
+  ]
+}
