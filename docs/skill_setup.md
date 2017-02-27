@@ -20,6 +20,7 @@ Provide the Skill Information:
 **Name** is `Super Simple Player`  
 **Invocation Name** is `simple player`  
 **Audio Player** under Global Fields is set  to `Yes`  
+
 It should look like this when all filled out:
 
 ![Skill Information](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillInformation.png)
@@ -28,11 +29,11 @@ Once everything is entered, select "Next". Now we setup the Interaction Model.
 
 ### Skill Interaction Model
 For the skill interaction model,
-cut and paste the contents of [speechAssets/IntentSchema.json](https://github.com/bespoken/super-simple-audio-player/blob/master/speechAssets/IntentSchema.json) into the Intent Schema section:
+cut and paste the contents of [speechAssets/IntentSchema.json](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/speechAssets/IntentSchema.json) into the Intent Schema section:
 
 ![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillIntentSchema.png)
 
-Then cut and paste the contents of [speechAssets/SampleUtterances.txt](https://github.com/bespoken/super-simple-audio-player/blob/master/speechAssets/SampleUtterances.txt) into the Sample Utterances field:
+Then cut and paste the contents of [speechAssets/SampleUtterances.txt](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/speechAssets/SampleUtterances.txt) into the Sample Utterances field:
 
 ![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillSampleUtterances.png)
 
@@ -42,6 +43,7 @@ The click "Next" again. It may take a minute to save as it parses the intents an
 First, set **Service Endpoint Type** to `HTTPS`.
 
 Then, set **Geographical Region** to `North America`.
+
 Finally, enter your bst proxy URL in the field for `North America`. Don't know your bst proxy URL? It's easy to get.
 
 If you have not already installed Bespoken Tools, you can do it now:
@@ -63,11 +65,17 @@ It should print out something like this:
 
 ![Proxy Output](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/bst-proxy-output.png)
 
-Copy and paste the highlighted part into the configuration window. Then hit "Next" again.
+Copy and paste the highlighted part into the configuration window. It should look like this:
+![Skill Configuration](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillConfiguration.png)
+
+Then hit "Next" again.
 
 ### Skill Certificate
 For the Skill Certificate screen, simply select:  
 `My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority`
+
+The page should look like this:
+![Skill Certificate](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillCertificate.png)
 
 Then click "Next" one more time.
 
