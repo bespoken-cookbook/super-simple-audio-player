@@ -89,7 +89,7 @@ bst proxy lambda index.js
 ```
 (Again, this should be run from the directory where you cloned the project, such as /Users/jpk/dev/super-simple-audio-player)
 
-Then on the testing field, in the **Service Simulator** section at the bottom, type `Play`. The click the `Ask Super Simple Player` button. It should return output like below:
+Then on the "Test" section, go to the **Service Simulator** section at the bottom and type `Play`. Then click the `Ask Super Simple Player` button. It should return output like below:
 
 ![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillServiceSimulator.png)
 
