@@ -25,7 +25,7 @@ npm install bespoken-tools -g
 ## Setting Up The Alexa Skill
 There are a number of steps to this.
 
-For a detailed walk-through, just [follow this guide](https://github.com/bespoken/super-simple-audio-player/blob/master/docs/skill_setup.md).
+For a detailed walk-through, just [follow this guide](https://github.com/bespoken/super-simple-audio-player/blob/Part1/docs/skill_setup.md).
 
 ## What It Does
 This skill is very simple. It is meant to be a starting point for understanding how the AudioPlayer works. What does it do?
@@ -47,7 +47,7 @@ bst proxy lambda index.js --verbose
 
 Then on the "Test" section, go to the **Service Simulator** section at the bottom and type `Play`. Then click the `Ask Super Simple Player` button. It should return output like below:
 
-![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillServiceSimulator.png)
+![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillServiceSimulator.png)
 
 ## Testing With An Echo Device
 Again, make sure that your bst proxy is running:
