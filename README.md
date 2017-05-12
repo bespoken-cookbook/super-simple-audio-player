@@ -61,3 +61,6 @@ Alexa, tell Simple Player to Play
 ```
 
 You should also be able to interact with it saying "Alexa Pause" and "Alexa Resume".
+
+## What's Next
+In Part 2, [we show you how to use the AudioPlayer queue](https://github.com/bespoken/super-simple-audio-player/blob/Part2/README.md), to move through a playlist of tracks automatically as well as at the user's command.
