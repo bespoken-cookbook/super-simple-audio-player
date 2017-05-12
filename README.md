@@ -76,6 +76,12 @@ This request comes from the Alexa service when the current audio is nearly finis
 * Set the previousToken to the currently playing track
 
 ```javascript
+var lastIndex = indexFromEvent(this.event);
+podcastIndex = lastIndex;
+
+// If we have reach the end of the feed, start back at the beginning
+podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
+
 // Enqueue the next podcast
 this.play(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex);
 ```
