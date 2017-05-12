@@ -1,7 +1,7 @@
 // This is only initialized when the Lambda is, so it is preserved across calls
 // It is NOT a real database, but can be used for testing, as JavaScript Lambdas tend to live for a few hours
 // Stay tuned for a more sophisticated example that uses DynamoDB
-var stateByUser = {};
+var lastPlayedByUser = {};
 
 var podcastFeed = [
     "https://feeds.soundcloud.com/stream/318108640-user-652822799-episode-012-alexa-skill-certification-with-sameer-lalwanilexa-dev-chat-final-mix.mp3",
@@ -25,30 +25,27 @@ var SimplePlayer = function (event, context) {
 SimplePlayer.prototype.handle = function () {
     var requestType = this.event.request.type;
     var userId = this.event.context ? this.event.context.System.user.userId : this.event.session.user.userId;
-    var response = null;
-    var lastPlayed = this.load(userId);
 
     // On launch, we tell the user what they can do (Play audio :-))
     if (requestType === "LaunchRequest") {
         this.say("Welcome to the Simple Audio Player. Say Play to play some audio!", "You can say Play");
 
-    // Handle Intents here - Play, Pause and Resume is all for now
+    // Handle Intents here - Play, Next, Previous, Pause and Resume
     } else if (requestType === "IntentRequest") {
         var intent = this.event.request.intent;
+        var lastPlayed = this.loadLastPlayed(userId);
 
         // We assume we start with the first podcast, but check the lastPlayed
-        var podcastIndex = 0;
-        if (lastPlayed) {
-            podcastIndex = parseInt(lastPlayed.request.token);
-        }
+        var podcastIndex = indexFromEvent(lastPlayed);
 
         if (intent.name === "Play") {
             this.queue(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 
         } else if (intent.name === "AMAZON.NextIntent") {
-            // If we have reach the end of the feed, start back at the beginning
+            // If we have reached the end of the feed, start back at the beginning
             podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
 
+            console.log("Index: " + podcastIndex);
             this.queue(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 
         } else if (intent.name === "AMAZON.PreviousIntent") {
@@ -71,11 +68,14 @@ SimplePlayer.prototype.handle = function () {
             this.queue(podcastFeed[podcastIndex], offsetInMilliseconds, "REPLACE_ALL", podcastIndex);
         }
     } else if (requestType === "AudioPlayer.PlaybackNearlyFinished") {
+        var lastIndex = indexFromEvent(this.event);
+        var podcastIndex = lastIndex;
+
         // If we have reach the end of the feed, start back at the beginning
         podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
 
-        // We save off the PlaybackStopped Intent, so we know what was last playing
-        this.queue(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex);
+        // Enqueue the next podcast
+        this.queue(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex);
 
     } else if (requestType === "AudioPlayer.PlaybackStarted") {
         // We simply respond with true to acknowledge the request
@@ -83,7 +83,7 @@ SimplePlayer.prototype.handle = function () {
 
     } else if (requestType === "AudioPlayer.PlaybackStopped") {
         // We save off the PlaybackStopped Intent, so we know what was last playing
-        this.save(userId, this.event);
+        this.saveLastPlayed(userId, this.event);
 
         // We respond with just true to acknowledge the request
         this.context.succeed(true);
@@ -116,11 +116,14 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
 };
 
 /**
- * Plays a particular track, from specific offset
+ * Queues a particular track for playback
  * @param audioURL The URL to play
  * @param offsetInMilliseconds The point from which to play - we set this to something other than zero when resuming
+ * @param playBehavior Either REPLACE_ALL, ENQUEUE or REPLACE_ENQUEUED
+ * @param token An identifier for the track we are going to play next
+ * @param previousToken This should only be set if we are doing an ENQUEUE or REPLACE_ENQUEUED
  */
-SimplePlayer.prototype.queue = function (audioURL, offsetInMilliseconds, playBehavior, token) {
+SimplePlayer.prototype.queue = function (audioURL, offsetInMilliseconds, playBehavior, token, previousToken) {
     var response = {
         version: "1.0",
         response: {
@@ -133,7 +136,7 @@ SimplePlayer.prototype.queue = function (audioURL, offsetInMilliseconds, playBeh
                         stream: {
                             url: audioURL,
                             token: token, // Unique token for the track - needed when queueing multiple tracks
-                            expectedPreviousToken: null, // The expected previous token - when using queues, ensures safety
+                            expectedPreviousToken: previousToken, // The expected previous token - when using queues, ensures safety
                             offsetInMilliseconds: offsetInMilliseconds
                         }
                     }
@@ -163,20 +166,26 @@ SimplePlayer.prototype.stop = function () {
 };
 
 // Saves information into our super simple, not-production-grade cache
-SimplePlayer.prototype.save = function (userId, state) {
-    console.log("Save: " + userId);
-    stateByUser[userId] = state;
+SimplePlayer.prototype.saveLastPlayed = function (userId, state) {
+    lastPlayedByUser[userId] = state;
 };
 
 // Load information from our super simple, not-production-grade cache
-SimplePlayer.prototype.load = function (userId) {
-    console.log("Load: " + userId);
-    var state = null;
-    if (userId in stateByUser) {
-        state = stateByUser[userId];
-        console.log("Loaded " + userId + " State: " + state);
+SimplePlayer.prototype.loadLastPlayed = function (userId) {
+    var lastPlayed = null;
+    if (userId in lastPlayedByUser) {
+        lastPlayed = lastPlayedByUser[userId];
     }
-    return state;
+    return lastPlayed;
+};
+
+var indexFromEvent = function(event) {
+    var index = 0;
+    if (event) {
+        // Turn it into an index - we will add or subtract if the user said next or previous
+        index = parseInt(event.request.token);
+    }
+    return index;
 };
 
 
