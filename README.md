@@ -12,7 +12,7 @@ In this step, we show you how to:
 ## Managing the Queue
 To manage the queue, we are going to make make use of the playBehavior property. This is what determines whether a track is played immediately or is queued to be played once the current audio completes.
 
-Rather than always saying `REPLACE_ALL` for the playBehavior, as we did in Part 1, we will also make use of `ENQUEUE`:
+Rather than always saying `REPLACE_ALL` for the playBehavior, as we did in Part 1, we will also make use of `ENQUEUE`.
 
 To do this, we expose a few more parameters on our `play` function:
 ```javascript
