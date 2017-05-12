@@ -1,6 +1,6 @@
-<p align="center" style="font-weight: bold">
+<p align="center" >
     <a href="https://github.com/bespoken/super-simple-audio-player/blob/master/README.md">Part 1</a> 
-    | Part 2 
+    | <strong>Part 2</strong>
     | Part 3 - Coming Soon!
 </p>
 
