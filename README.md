@@ -69,4 +69,12 @@ This is an important one - besides allowing the user to say Next and Previous, w
 To do this, we take advantage of the AudioPlayer.PlaybackNearlyFinished request.
 Since only one track can be queued at a time, we need to use this to create our queue (otherwise, we might just load up our queue with a single directive at the start).
 
-This request comes near the conclusion of the current audio playing. Since
+This request comes near the conclusion of the current audio playing. Here we:
+* Set the playBehavior as `ENQUEUE`
+* Set the previousToken to the currently playing track
+
+By setting all this properly, we ensure our audio smoothly transitions from one track to the next. Neat, right?
+
+## What Is Next?
+Our AudioPlayer skill is getting more complicated. To make sure it's all working correctly without lots of tedious manual testing,
+in our next edition we will add unit tests with [the BSTAlexa emulator](http://docs.bespoken.tools/en/latest/tutorials/tutorial_bst_emulator_nodejs/).
