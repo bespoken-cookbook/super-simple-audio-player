@@ -1,4 +1,4 @@
-[Part 1](https://github.com/bespoken/super-simple-audio-player/blob/master/README.md) | Part 2 | Part 3 - Coming Soon!
+<p align="center" style="font-weight: bold">[Part 1](https://github.com/bespoken/super-simple-audio-player/blob/master/README.md) | Part 2 | Part 3 - Coming Soon!</p>
 
 # Part 2 - Next/Previous and the AudioPlayer Queue
 In this step, we show you how to use the builtin AMAZON.NextIntent and AMAZON.PreviousIntent.
