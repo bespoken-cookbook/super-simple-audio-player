@@ -25,6 +25,7 @@ var SimplePlayer = function (event, context) {
 SimplePlayer.prototype.handle = function () {
     var requestType = this.event.request.type;
     var userId = this.event.context ? this.event.context.System.user.userId : this.event.session.user.userId;
+    var podcastIndex;
 
     // On launch, we tell the user what they can do (Play audio :-))
     if (requestType === "LaunchRequest") {
@@ -36,23 +37,22 @@ SimplePlayer.prototype.handle = function () {
         var lastPlayed = this.loadLastPlayed(userId);
 
         // We assume we start with the first podcast, but check the lastPlayed
-        var podcastIndex = indexFromEvent(lastPlayed);
+        podcastIndex = indexFromEvent(lastPlayed);
 
         if (intent.name === "Play") {
-            this.queue(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
+            this.play(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 
         } else if (intent.name === "AMAZON.NextIntent") {
             // If we have reached the end of the feed, start back at the beginning
             podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
 
-            console.log("Index: " + podcastIndex);
-            this.queue(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
+            this.play(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 
         } else if (intent.name === "AMAZON.PreviousIntent") {
             // If we have reached the start of the feed, go back to the end
             podcastIndex == 0 ? podcastIndex = podcastFeed.length - 1 : podcastIndex--;
 
-            this.queue(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
+            this.play(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 
         } else if (intent.name === "AMAZON.PauseIntent") {
             // When we receive a Pause Intent, we need to issue a stop directive
@@ -65,17 +65,17 @@ SimplePlayer.prototype.handle = function () {
                 offsetInMilliseconds = lastPlayed.request.offsetInMilliseconds;
             }
 
-            this.queue(podcastFeed[podcastIndex], offsetInMilliseconds, "REPLACE_ALL", podcastIndex);
+            this.play(podcastFeed[podcastIndex], offsetInMilliseconds, "REPLACE_ALL", podcastIndex);
         }
     } else if (requestType === "AudioPlayer.PlaybackNearlyFinished") {
         var lastIndex = indexFromEvent(this.event);
-        var podcastIndex = lastIndex;
+        podcastIndex = lastIndex;
 
         // If we have reach the end of the feed, start back at the beginning
         podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
 
         // Enqueue the next podcast
-        this.queue(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex);
+        this.play(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex);
 
     } else if (requestType === "AudioPlayer.PlaybackStarted") {
         // We simply respond with true to acknowledge the request
@@ -116,14 +116,14 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
 };
 
 /**
- * Queues a particular track for playback
+ * Plays a particular track for playback, either now or after the current track finishes
  * @param audioURL The URL to play
  * @param offsetInMilliseconds The point from which to play - we set this to something other than zero when resuming
  * @param playBehavior Either REPLACE_ALL, ENQUEUE or REPLACE_ENQUEUED
  * @param token An identifier for the track we are going to play next
  * @param previousToken This should only be set if we are doing an ENQUEUE or REPLACE_ENQUEUED
  */
-SimplePlayer.prototype.queue = function (audioURL, offsetInMilliseconds, playBehavior, token, previousToken) {
+SimplePlayer.prototype.play = function (audioURL, offsetInMilliseconds, playBehavior, token, previousToken) {
     var response = {
         version: "1.0",
         response: {
@@ -187,6 +187,3 @@ var indexFromEvent = function(event) {
     }
     return index;
 };
-
-
-
