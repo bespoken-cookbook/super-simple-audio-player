@@ -4,7 +4,7 @@
     | Part 3 - Coming Soon!
 </p>
 
-# Part 1 - The Super Simple AudioPlayer - Getting Started
+# The Super Simple AudioPlayer - Getting Started
 This project is meant to make it as easy as possible to get started using the [Amazon Alexa AudioPlayer](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference).
 
 It is an AWS Lambda project with no code dependencies and no frameworks. It is meant to illustrate the core behavior of the AudioPlayer in the simplest manner possible.
