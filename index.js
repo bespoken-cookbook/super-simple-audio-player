@@ -107,7 +107,7 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
             reprompt: {
                 outputSpeech: {
                     type: "SSML",
-                    ssml: "<speak> " + message + " </speak>"
+                    ssml: "<speak> " + repromptMessage + " </speak>"
                 }
             }
         }
@@ -143,7 +143,7 @@ SimplePlayer.prototype.queue = function (audioURL, offsetInMilliseconds, playBeh
                 }
             ]
         }
-    }
+    };
 
     this.context.succeed(response);
 };
@@ -166,8 +166,8 @@ SimplePlayer.prototype.stop = function () {
 };
 
 // Saves information into our super simple, not-production-grade cache
-SimplePlayer.prototype.saveLastPlayed = function (userId, state) {
-    lastPlayedByUser[userId] = state;
+SimplePlayer.prototype.saveLastPlayed = function (userId, lastPlayed) {
+    lastPlayedByUser[userId] = lastPlayed;
 };
 
 // Load information from our super simple, not-production-grade cache
