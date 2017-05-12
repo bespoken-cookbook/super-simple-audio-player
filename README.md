@@ -13,7 +13,7 @@ To manage the queue, we are going to make make use of the playBehavior property.
 Rather than always saying `REPLACE_ALL` for the playBehavior, as we did in Part 1, we will also make use of `ENQUEUE`:
 
 To do this, we expose a few more parameters on our `play` function:
-```
+```javascript
 SimplePlayer.prototype.play = function (audioURL, offsetInMilliseconds, playBehavior, token, previousToken) {
     var response = {
         version: "1.0",
