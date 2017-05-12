@@ -1,5 +1,5 @@
 <p align="center" >
-    <a href="https://github.com/bespoken/super-simple-audio-player/blob/master/README.md">Part 1</a> 
+    <a href="https://github.com/bespoken/super-simple-audio-player/blob/Part1/README.md">Part 1</a> 
     | <strong>Part 2</strong>
     | Part 3 - Coming Soon!
 </p>
