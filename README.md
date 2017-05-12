@@ -1,5 +1,5 @@
 <p align="center" >
-    <a href="https://github.com/bespoken/super-simple-audio-player/tree/Part1">Part 1</a> 
+    <a href="https://github.com/bespoken/super-simple-audio-player/blob/Part1/README.md">Part 1</a> 
     | <strong>Part 2</strong>
     | Part 3 - Coming Soon!
 </p>
@@ -53,7 +53,7 @@ For our purposes, we are only using REPLACE_ALL and ENQUEUE right now.
 The tokens are also important. They give a unique label to the track being played, and are used to prevent race conditions. 
 You can [read more about it here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play).
 
-## Handling the Intents
+## Handling the Next and Previous Intents
 We use the builtin AMAZON.NextIntent and AMAZON.PreviousIntent.
 
 We now have a an array of podcasts to playback, and we move through them in a cycle. Meaning, when reach the end of the array, we start over at the beginning.
@@ -65,13 +65,13 @@ this.play(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
 ```
 That way, a user can keep saying "Next" or "Previous" perpetually.
 
-## Handling the AudioPlayer.PlaybackNearlyFinished
+## Automatically Playing the Next Track
 This is an important one - besides allowing the user to say Next and Previous, we want to also automatically start our next podcast once the current one finishes.
 
-To do this, we take advantage of the AudioPlayer.PlaybackNearlyFinished request.
+To do this, we take advantage of the AudioPlayer.PlaybackNearlyFinished request that Alexa sends.
 Since only one track can be queued at a time, we need to use this to create our queue.
 
-This request is by Alexa near the conclusion of the current audio playing. When we receive it, we:
+This request comes from the Alexa service when the current audio is nearly finished playing on the device. When we receive it, we:
 * Set the playBehavior as `ENQUEUE`
 * Set the previousToken to the currently playing track
 
