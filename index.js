@@ -1,7 +1,7 @@
 // This is only initialized when the Lambda is, so it is preserved across calls
 // It is NOT a real database, but can be used for testing, as JavaScript Lambdas tend to live for a few hours
 // Stay tuned for a more sophisticated example that uses DynamoDB
-var stateByUser = {};
+var lastPlayedByUser = {};
 var podcastURL = "https://feeds.soundcloud.com/stream/309340878-user-652822799-episode-010-building-an-alexa-skill-with-flask-ask-with-john-wheeler.mp3";
 
 // Entry-point for the Lambda
@@ -20,7 +20,6 @@ var SimplePlayer = function (event, context) {
 SimplePlayer.prototype.handle = function () {
     var requestType = this.event.request.type;
     var userId = this.event.context ? this.event.context.System.user.userId : this.event.session.user.userId;
-    var response = null;
 
     // On launch, we tell the user what they can do (Play audio :-))
     if (requestType === "LaunchRequest") {
@@ -38,7 +37,7 @@ SimplePlayer.prototype.handle = function () {
             this.stop();
 
         } else if (intent.name === "AMAZON.ResumeIntent") {
-            var lastPlayed = this.load(userId);
+            var lastPlayed = this.loadLastPlayed(userId);
             var offsetInMilliseconds = 0;
             if (lastPlayed !== null) {
                 offsetInMilliseconds = lastPlayed.request.offsetInMilliseconds;
@@ -48,8 +47,10 @@ SimplePlayer.prototype.handle = function () {
         }
     } else if (requestType === "AudioPlayer.PlaybackStopped") {
         // We save off the PlaybackStopped Intent, so we know what was last playing
-        this.save(userId, this.event);
+        this.saveLastPlayed(userId, this.event);
 
+        // We respond with just true to acknowledge the request
+        this.context.succeed(true);
     }
 };
 
@@ -70,11 +71,11 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
             reprompt: {
                 outputSpeech: {
                     type: "SSML",
-                    ssml: "<speak> " + message + " </speak>"
+                    ssml: "<speak> " + repromptMessage + " </speak>"
                 }
             }
         }
-    }
+    };
     this.context.succeed(response);
 };
 
@@ -103,7 +104,7 @@ SimplePlayer.prototype.play = function (audioURL, offsetInMilliseconds) {
                 }
             ]
         }
-    }
+    };
 
     this.context.succeed(response);
 };
@@ -120,26 +121,23 @@ SimplePlayer.prototype.stop = function () {
                 }
             ]
         }
-    }
+    };
 
     this.context.succeed(response);
 };
 
 // Saves information into our super simple, not-production-grade cache
-SimplePlayer.prototype.save = function (userId, state) {
-    console.log("Save: " + userId);
-    stateByUser[userId] = state;
+SimplePlayer.prototype.saveLastPlayed = function (userId, lastPlayed) {
+    lastPlayedByUser[userId] = lastPlayed;
 };
 
 // Load information from our super simple, not-production-grade cache
-SimplePlayer.prototype.load = function (userId) {
-    console.log("Load: " + userId);
-    var state = null;
-    if (userId in stateByUser) {
-        state = stateByUser[userId];
-        console.log("Loaded " + userId + " State: " + state);
+SimplePlayer.prototype.loadLastPlayed = function (userId) {
+    var lastPlayed = null;
+    if (userId in lastPlayedByUser) {
+        lastPlayed = lastPlayedByUser[userId];
     }
-    return state;
+    return lastPlayed;
 };
 
 
