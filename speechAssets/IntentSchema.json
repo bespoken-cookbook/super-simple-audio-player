@@ -2,6 +2,12 @@
   "intents": [
     {
       "intent": "Play"
+      },
+    {
+      "intent": "AMAZON.NextIntent"
+    },
+    {
+      "intent": "AMAZON.PreviousIntent"
     },
     {
       "intent": "AMAZON.PauseIntent"

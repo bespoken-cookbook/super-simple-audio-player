@@ -2,3 +2,14 @@ Play play
 Play start
 Play start playing
 Play play now
+Next next
+Next next track
+Next next podcast
+Next fast forward
+Next forward
+Previous previous
+Previous previous track
+Previous previous podcast
+Previous reverse
+Previous backward
+Previous last
