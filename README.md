@@ -14,7 +14,7 @@ This is the first iteration - we will be expanding on this as a tutorial that gu
 ## Setting Up Locally
 To begin, just clone this repository:
 ```
-git clone https://github.com/bespoken/super-simple-audioplayer.git
+git clone https://github.com/bespoken/super-simple-audio-player.git
 ```
 
 To follow along, also install the BST (Bespoken Tools) CLI:
