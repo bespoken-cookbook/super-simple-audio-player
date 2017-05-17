@@ -52,7 +52,7 @@ Then on the "Test" section, go to the **Service Simulator** section at the botto
 ## Testing With An Echo Device
 Again, make sure that your bst proxy is running:
 ```
-bst proxy lambda index.js --verbose
+bst proxy lambda index.js
 ```
 
 Then just talk to your Echo device - say something like:
