@@ -41,7 +41,7 @@ These instructions assume you are using the `bst proxy` for testing locally on y
 ## Testing With The Service Simulator
 To ensure everything is working correctly, make sure that your bst proxy is running:
 ```
-bst proxy lambda index.js --verbose
+bst proxy lambda index.js
 ```
 (Again, this should be run from the directory where you cloned the project, such as /Users/jpk/dev/super-simple-audio-player)
 
