@@ -4,11 +4,14 @@
 var lastPlayedByUser = {};
 var podcastURL = "https://feeds.soundcloud.com/stream/309340878-user-652822799-episode-010-building-an-alexa-skill-with-flask-ask-with-john-wheeler.mp3";
 
+const bst = require("bespoken-tools");
+bst.Logless.Domain = "logless-dev.bespoken.tools";
+
 // Entry-point for the Lambda
-exports.handler = function(event, context) {
+exports.handler = bst.Logless.capture("a756512f-d091-477a-a4f9-fd57c916787a", function(event, context) {
     var player = new SimplePlayer(event, context);
     player.handle();
-};
+});
 
 // The SimplePlayer has helpful routines for interacting with Alexa, within minimal overhead
 var SimplePlayer = function (event, context) {

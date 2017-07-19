@@ -1,0 +1,8 @@
+{
+  "name": "SuperSimpleAudioPlayer",
+  "description": "Simple Audio Player",
+  "dependencies": {
+    "bespoken-tools": "^1.0.1"
+  },
+  "private": true
+}
