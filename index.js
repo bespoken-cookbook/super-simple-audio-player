@@ -88,6 +88,15 @@ SimplePlayer.prototype.handle = function () {
 
         // We respond with just true to acknowledge the request
         this.context.succeed(true);
+    } else if (requestType === "SessionEndedRequest") {
+        var response = {
+            version: "1.0",
+            response: {
+                shouldEndSession: true
+            }
+        };
+        // We respond with just true to acknowledge the request
+        this.context.succeed(response);
     }
 };
 
