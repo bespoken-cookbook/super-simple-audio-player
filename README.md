@@ -77,6 +77,11 @@ export interface ISilentResult {
 }
 ```
 
+And the interactions with Alexa can be chained together, like so:
+```javascript
+
+```
+
 Take a look at the full [unit-test code here](https://github.com/bespoken/super-simple-audio-player/blob/Part3/test/index-test.js).
 
 ## What Is Next?
