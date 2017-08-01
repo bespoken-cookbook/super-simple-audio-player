@@ -1,0 +1,32 @@
+{
+  "name": "@jpkxapp/simple-audio-player",
+  "version": "1.0.0",
+  "description": "<p align=\"center\" >     <strong>Part 1</strong>      | <a href=\"https://github.com/bespoken/super-simple-audio-player/blob/part2/README.md\">Part 2</a>      | Part 3 - Coming Soon! </p>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "bespoken-tools": "^1.0.3",
+    "chai": "^4.1.0",
+    "dotenv": "^4.0.0",
+    "silent-echo-sdk": "^0.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "serverless-plugin-bespoken": "0.0.5"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bespoken/super-simple-audio-player.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bespoken/super-simple-audio-player/issues"
+  },
+  "homepage": "https://github.com/bespoken/super-simple-audio-player#readme"
+}

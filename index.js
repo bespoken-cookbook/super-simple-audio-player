@@ -4,9 +4,17 @@
 var lastPlayedByUser = {};
 
 var podcastFeed = [
+    "https://feeds.soundcloud.com/stream/323049941-user-652822799-episode-013-creating-alexa-skills-using-bespoken-tools-with-john-kelvie.mp3",
     "https://feeds.soundcloud.com/stream/318108640-user-652822799-episode-012-alexa-skill-certification-with-sameer-lalwanilexa-dev-chat-final-mix.mp3",
     "https://feeds.soundcloud.com/stream/314247951-user-652822799-episode-011-alexa-smart-home-partner-network-with-zach-parker.mp3",
     "https://feeds.soundcloud.com/stream/309340878-user-652822799-episode-010-building-an-alexa-skill-with-flask-ask-with-john-wheeler.mp3"
+];
+
+var podcastDescriptions = [
+    "Episode 13: Creating Alexa Skills With Bespoken Tools",
+    "Episode 12: Alexa Skill Certification with Sameer Lalwanilexa",
+    "Episode 11: Alexa Smart Home Partner Network",
+    "Episode 10: Building skills with Flask Ask"
 ];
 
 // Entry-point for the Lambda
@@ -29,7 +37,7 @@ SimplePlayer.prototype.handle = function () {
 
     // On launch, we tell the user what they can do (Play audio :-))
     if (requestType === "LaunchRequest") {
-        this.say("Welcome to the Simple Audio Player. Say Play to play some audio!", "You can say Play");
+        this.say("Welcome to the Simple Audio Player. Say Play to play some audio or say list!", "You can say Play or List");
 
     // Handle Intents here - Play, Next, Previous, Pause and Resume
     } else if (requestType === "IntentRequest") {
@@ -41,6 +49,9 @@ SimplePlayer.prototype.handle = function () {
 
         if (intent.name === "Play") {
             this.play(podcastFeed[podcastIndex], 0, "REPLACE_ALL", podcastIndex);
+
+        } else if (intent.name === "List") {
+            this.list("Episodes to choose from", "Episodes to choose from");
 
         } else if (intent.name === "AMAZON.NextIntent") {
             // If we have reached the end of the feed, start back at the beginning
@@ -75,7 +86,7 @@ SimplePlayer.prototype.handle = function () {
         podcastIndex >= podcastFeed.length - 1 ? podcastIndex = 0 : podcastIndex++;
 
         // Enqueue the next podcast
-        this.play(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex);
+        this.play(podcastFeed[podcastIndex], 0, "ENQUEUE", podcastIndex, lastIndex, podcastDescriptions[podcastIndex]);
 
     } else if (requestType === "AudioPlayer.PlaybackStarted") {
         // We simply respond with true to acknowledge the request
@@ -87,6 +98,11 @@ SimplePlayer.prototype.handle = function () {
 
         // We respond with just true to acknowledge the request
         this.context.succeed(true);
+    } else if (requestType === "Display.ElementSelected") {
+        var indexString = this.event.request.token;
+        var index = parseInt(indexString);
+        var url = podcastFeed[index];
+        this.play(url, 0, "REPLACE_ALL", indexString);
     }
 };
 
@@ -100,6 +116,31 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
         version: "1.0",
         response: {
             shouldEndSession: false,
+            directives: [
+                {
+                    type: "Display.RenderTemplate",
+                    template: {
+                        type: "BodyTemplate3",
+                        image: {
+                            "contentDescription": "Podcast Image",
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/bespoken/TIP/SmallCard.jpg"
+                                }
+                            ]
+                        },
+                        title: "Welcome to the Simple Audio Player",
+                        token: "AToken",
+                        textContent: {
+                            primaryText: {
+                                type: "RichText",
+                                text: "<font size = '5'>" + message + "</font>"
+                            }
+                        },
+                        backButton: "HIDDEN"
+                    }
+                }
+            ],
             outputSpeech: {
                 type: "SSML",
                 ssml: "<speak> " + message + " </speak>"
@@ -112,6 +153,57 @@ SimplePlayer.prototype.say = function (message, repromptMessage) {
             }
         }
     };
+    this.context.succeed(response);
+};
+
+SimplePlayer.prototype.list = function (message, repromptMessage) {
+    var response = {
+        version: "1.0",
+        response: {
+            shouldEndSession: false,
+            directives: [
+                {
+                    type: "Display.RenderTemplate",
+                    template: {
+                        type: "ListTemplate1",
+                        title: "Welcome to the Simple Audio Player",
+                        token: "AToken",
+                        textContent: {
+                            primaryText: {
+                                type: "RichText",
+                                text: "<font size = '5'>" + message + "</font>"
+                            }
+                        },
+                        listItems: [],
+                        backButton: "HIDDEN"
+                    }
+                }
+            ],
+            outputSpeech: {
+                type: "SSML",
+                ssml: "<speak> " + message + " </speak>"
+            },
+            reprompt: {
+                outputSpeech: {
+                    type: "SSML",
+                    ssml: "<speak> " + repromptMessage + " </speak>"
+                }
+            }
+        }
+    };
+
+    for (var i=0;i<podcastFeed.length;i++) {
+        var item = podcastFeed[i];
+        response.response.directives[0].template.listItems.push({
+            token: (i+""),
+            textContent: {
+                primaryText: {
+                    type: "RichText",
+                    text: "<font size = '5'>" + podcastDescriptions[i] + "</font>"
+                }
+            }
+        });
+    }
     this.context.succeed(response);
 };
 
