@@ -23,19 +23,19 @@ Provide the Skill Information:
 
 It should look like this when all filled out:
 
-![Skill Information](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillInformation.png)
+![Skill Information](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillInformation.png)
 
 Once everything is entered, select "Next". Now we setup the Interaction Model.
 
 ### Skill Interaction Model
 For the skill interaction model,
-cut and paste the contents of [speechAssets/IntentSchema.json](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/speechAssets/IntentSchema.json) into the Intent Schema section:
+cut and paste the contents of [speechAssets/IntentSchema.json](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/speechAssets/IntentSchema.json) into the Intent Schema section:
 
-![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillIntentSchema.png)
+![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillIntentSchema.png)
 
-Then cut and paste the contents of [speechAssets/SampleUtterances.txt](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/speechAssets/SampleUtterances.txt) into the Sample Utterances field:
+Then cut and paste the contents of [speechAssets/SampleUtterances.txt](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/speechAssets/SampleUtterances.txt) into the Sample Utterances field:
 
-![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillSampleUtterances.png)
+![Intent Schema](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillSampleUtterances.png)
 
 The click "Next" again. It may take a minute to save as it parses the intents and utterances.
 
@@ -63,10 +63,10 @@ bst proxy lambda index.js --verbose
 
 It should print out something like this:
 
-![Proxy Output](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/bst-proxy-output.png)
+![Proxy Output](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/bst-proxy-output.png)
 
 Copy and paste the highlighted part into the configuration window. It should look like this:
-![Skill Configuration](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillConfiguration.png)
+![Skill Configuration](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillConfiguration.png)
 
 Then hit "Next" again.
 
@@ -75,7 +75,7 @@ For the Skill Certificate screen, simply select:
 `My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority`
 
 The page should look like this:
-![Skill Certificate](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillCertificate.png)
+![Skill Certificate](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillCertificate.png)
 
 Then click "Next" one more time.
 
@@ -91,6 +91,6 @@ bst proxy lambda index.js --verbose
 
 Then on the "Test" section, go to the **Service Simulator** section at the bottom and type `Play`. Then click the `Ask Super Simple Player` button. It should return output like below:
 
-![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillServiceSimulator.png)
+![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillServiceSimulator.png)
 
 Now you are ready to do awesome stuff with the AudioPlayer!

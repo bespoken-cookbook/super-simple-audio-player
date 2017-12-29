@@ -1,6 +1,6 @@
 <p align="center" >
     <strong>Part 1</strong> 
-    | <a href="https://github.com/bespoken/super-simple-audio-player/blob/part2/README.md">Part 2</a> 
+    | <a href="https://github.com/bespoken/super-simple-audio-player/tree/Part2">Part 2</a> 
     | Part 3 - Coming Soon!
 </p>
 
@@ -14,7 +14,7 @@ This is the first iteration - we will be expanding on this as a tutorial that gu
 ## Setting Up Locally
 To begin, just clone this repository:
 ```
-git clone https://github.com/bespoken/super-simple-audioplayer.git
+git clone https://github.com/bespoken/super-simple-audio-player.git
 ```
 
 To follow along, also install the BST (Bespoken Tools) CLI:
@@ -25,7 +25,7 @@ npm install bespoken-tools -g
 ## Setting Up The Alexa Skill
 There are a number of steps to this.
 
-For a detailed walk-through, just [follow this guide](https://github.com/bespoken/super-simple-audio-player/blob/master/docs/skill_setup.md).
+For a detailed walk-through, just [follow this guide](https://github.com/bespoken/super-simple-audio-player/blob/Part1/docs/skill_setup.md).
 
 ## What It Does
 This skill is very simple. It is meant to be a starting point for understanding how the AudioPlayer works. What does it do?
@@ -41,18 +41,18 @@ These instructions assume you are using the `bst proxy` for testing locally on y
 ## Testing With The Service Simulator
 To ensure everything is working correctly, make sure that your bst proxy is running:
 ```
-bst proxy lambda index.js --verbose
+bst proxy lambda index.js
 ```
 (Again, this should be run from the directory where you cloned the project, such as /Users/jpk/dev/super-simple-audio-player)
 
 Then on the "Test" section, go to the **Service Simulator** section at the bottom and type `Play`. Then click the `Ask Super Simple Player` button. It should return output like below:
 
-![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/master/misc/SkillServiceSimulator.png)
+![Service Simulator](https://raw.githubusercontent.com/bespoken/super-simple-audio-player/Part1/misc/SkillServiceSimulator.png)
 
 ## Testing With An Echo Device
 Again, make sure that your bst proxy is running:
 ```
-bst proxy lambda index.js --verbose
+bst proxy lambda index.js
 ```
 
 Then just talk to your Echo device - say something like:
@@ -61,3 +61,6 @@ Alexa, tell Simple Player to Play
 ```
 
 You should also be able to interact with it saying "Alexa Pause" and "Alexa Resume".
+
+## What's Next
+In Part 2, [we show you how to use the AudioPlayer queue](https://github.com/bespoken/super-simple-audio-player/blob/Part2/README.md), to move through a playlist of tracks automatically as well as at the user's command.
