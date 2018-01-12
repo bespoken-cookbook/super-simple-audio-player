@@ -26,7 +26,7 @@ npm install
 ```
 
 ## Writing the Unit Tests
-Here is a really simple automated test with Silent Echo:
+Here is a really simple automated test with Virtual Alexa:
 ```javascript
     it("Opens the Skill", function(done) {
         alexa.launch().then((result) => {
