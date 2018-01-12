@@ -7,11 +7,11 @@
 # Part 3 - Automated Unit Tests
 In this step, we show you how to:
 1) Setup your project for unit testing
-2) Leverage the [Silent Echo SDK](https://github.com/bespoken/silent-echo-sdk) to test
+2) Leverage the [Virtual Alexa](https://github.com/bespoken/virtual-alexa) emulator to test
 
 Unit tests are important for testing your skill as you develop it, as well for ensuring nothing gets broken as you add new features.
 
-They are an essential part of building industrial-strength Alexa Skills.
+They are an essential part of building industrial-strength Alexa skills.
 
 ## Getting Setup For Unit Tests
 We use the [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/) frameworks for unit tests.
@@ -25,61 +25,50 @@ This captures all the new dependencies. To install them, just run:
 npm install
 ```
 
-## Enabling Silent Echo
-To use Silent Echo, you will first need to get a token.
-
-The token is associated with your Amazon Developer account, and allows Silent Echo to access your in-development skill.
-
-To get your token, click here:
-[https://silentecho.bespoken.io/register?token=true](https://silentecho.bespoken.io/register?token=true)
-
-You will login to Amazon to grant Silent Echo access to your account.
-Once you do that, save off the token shown on the screen.
-
 ## Writing the Unit Tests
 Here is a really simple automated test with Silent Echo:
 ```javascript
-    it("Opens the Skill", function(done) {
-        const silentEcho = new sdk.SilentEcho(process.env.TEST_TOKEN);
-        silentEcho.baseURL = BASE_URL;
-        silentEcho.message("open simple player").then((result) => {
-            assert.isDefined(result.transcript);
-            assert.isTrue(result.transcript.startsWith("welcome to the simple audio player"));
-            return silentEcho.message("quit");
-        }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
-            done();
-        }).catch((e) => {
-            assert.fail(e, "This should not have happened");
-        });
+    alexa.launch().then((result) => {
+        assert.isDefined(result.response.outputSpeech.ssml);
+        assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+        done();
+    }).catch((e) => {
+        fail(e);
     });
- ```
-
-What it does is initializes the Silent Echo, then tells it to "open simple player".
-This is just like if you said to your Echo - "Alexa, open simple player".
-
-The neat thing is the result of what echo says in reply is available in the result.transcript object.
-
-Keep in mind - this is using Speech-To-Text on what Alexa replies with, so it is not 100% accurate.
-But it is generally repeatable, so it will come back with the same results consistently.
-
-There's lots that comes back in the payload - the full docs are at the Silent Echo SDK, but here is a summary:
-```javascript
-export interface ISilentResult {
-    card: ICard | null;
-    debug?: {
-        rawJSON: any;
-    };
-    sessionTimeout: number;
-    streamURL: string | null;
-    transcript: string;
-    transcriptAudioURL: string;
-}
 ```
 
-And the interactions with Alexa can be chained together, like so:
-```javascript
+This simply launches the skills and checks to see that a proper response comes back.
 
+Here is an example that works through a full interaction with playback:
+```javascript
+    it("Opens the Skill, Play, Next and Finish", function(done) {
+        alexa.launch().then((result) => {
+            assert.isDefined(result.response.outputSpeech.ssml);
+            assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+            return alexa.utter("play");
+
+        }).then((result) => {
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-013");
+            return alexa.utter("next");
+
+        }).then((result) => {
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-012");
+            return alexa.audioPlayer().playbackNearlyFinished();
+
+        }).then((result) => {
+            // When playback nearly finished is called, the next track is queued
+            assert.include(result.response.directives[0].playBehavior, "ENQUEUE");
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-011");
+
+            // The previous track is still playing though until playback finished is called
+            assert.include(alexa.audioPlayer().playing().stream.url, "episode-012");
+            alexa.audioPlayer().playbackFinished();
+
+        }).then((result) => {
+            assert.include(alexa.audioPlayer().playing().stream.url, "episode-011");
+            done();
+        })
+    });
 ```
 
 Take a look at the full [unit-test code here](https://github.com/bespoken/super-simple-audio-player/blob/Part3/test/index-test.js).
