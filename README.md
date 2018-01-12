@@ -1,7 +1,7 @@
 <p align="center" >
     <strong>Part 1</strong> 
     | <a href="https://github.com/bespoken/super-simple-audio-player/tree/Part2">Part 2</a> 
-    | Part 3 - Coming Soon!
+    | <a href="https://github.com/bespoken/super-simple-audio-player/blob/Part3/README.md">Part 3</a>
 </p>
 
 # The Super Simple AudioPlayer - Getting Started
