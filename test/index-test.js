@@ -1,84 +1,79 @@
 const assert = require("chai").assert;
-const bst = require("bespoken-tools");
+const va = require("virtual-alexa");
 const dotenv = require("dotenv");
-const sdk = require("silent-echo-sdk");
 
 describe("SimpleAudioPlayerTest", function() {
-    this.timeout(60000);
-    const BASE_URL = "https://silentecho-dev.bespoken.io/process";
-
     before(() => {
         dotenv.config();
     });
 
-    var proxy;
-    beforeEach(function(done) {
-        proxy = bst.BSTProxy.lambda("index.js").secretKey("aaaa34ce-3d55-40de-bfcd-2c7f9834f4c7").start(() => {
-            done();
-        });
-    });
-
-    afterEach(function(done) {
-        proxy.stop(() => {
-            done();
-        })
+    let alexa;
+    beforeEach(function() {
+        alexa = va.VirtualAlexa.Builder()
+            .handler("index.handler") // Lambda function file and name
+            .intentSchemaFile("./speechAssets/IntentSchema.json")
+            .sampleUtterancesFile("./speechAssets/SampleUtterances.txt")
+            .create();
     });
 
     it("Opens the Skill", function(done) {
-        const silentEcho = new sdk.SilentEcho(process.env.TEST_TOKEN);
-        silentEcho.baseURL = BASE_URL;
-        silentEcho.message("open simple player").then((result) => {
-            assert.isDefined(result.transcript);
-            assert.isTrue(result.transcript.startsWith("welcome to the simple audio player"));
-            return silentEcho.message("quit");
+        alexa.launch().then((result) => {
+            assert.isDefined(result.response.outputSpeech.ssml);
+            assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+            done();
+        }).catch((e) => {
+            fail(e);
+        });
+    });
+
+    it("Opens the Skill, Play, Next and Finish", function(done) {
+        alexa.launch().then((result) => {
+            assert.isDefined(result.response.outputSpeech.ssml);
+            assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+            return alexa.utter("play");
+
         }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-013");
+            return alexa.utter("next");
+
+        }).then((result) => {
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-012");
+            return alexa.audioPlayer().playbackNearlyFinished();
+
+        }).then((result) => {
+            // When playback nearly finished is called, the next track is queued
+            assert.include(result.response.directives[0].playBehavior, "ENQUEUE");
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-011");
+
+            // The previous track is still playing though until playback finished is called
+            assert.include(alexa.audioPlayer().playing().stream.url, "episode-012");
+            alexa.audioPlayer().playbackFinished();
+
+        }).then((result) => {
+            assert.include(alexa.audioPlayer().playing().stream.url, "episode-011");
             done();
         }).catch((e) => {
             assert.fail(e, "This should not have happened");
         });
     });
 
-    it("Opens the Skill and Plays", function(done) {
-        const silentEcho = new sdk.SilentEcho(process.env.TEST_TOKEN);
-        silentEcho.baseURL = BASE_URL;
-        silentEcho.message("open simple player").then((result) => {
-            assert.isDefined(result.transcript);
-            assert.isTrue(result.transcript.startsWith("welcome to the simple audio player"));
-            return silentEcho.message("play");
-        }).then((result) => {
-            assert.isDefined(result.streamURL);
-            assert.equal(result.streamURL, "https://feeds.soundcloud.com/stream/323049941-user-652822799-episode-013-creating-alexa-skills-using-bespoken-tools-with-john-kelvie.mp3");
-            return silentEcho.message("quit");
-        }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
-            done();
-        }).catch((e) => {
-            assert.fail(e, "This should not have happened");
-        });
-    });
+    it("Opens the Skill and Plays, Next, Then Previous", function(done) {
+        alexa.launch().then((result) => {
+            assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+            return alexa.utter("play");
 
-    it("Opens the Skill and Plays and Goes to Next", function(done) {
-        const silentEcho = new sdk.SilentEcho(process.env.TEST_TOKEN);
-        silentEcho.baseURL = BASE_URL;
-        silentEcho.message("open simple player").then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
-            assert.isDefined(result.transcript);
-            assert.isTrue(result.transcript.startsWith("welcome to the simple audio player"));
-            return silentEcho.message("play");
         }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
-            assert.isDefined(result.streamURL);
-            assert.equal(result.streamURL, "https://feeds.soundcloud.com/stream/323049941-user-652822799-episode-013-creating-alexa-skills-using-bespoken-tools-with-john-kelvie.mp3");
-            return silentEcho.message("play next");
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-013");
+            return alexa.utter("next");
+
         }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
-            assert.isDefined(result.streamURL);
-            assert.equal(result.streamURL, "https://feeds.soundcloud.com/stream/318108640-user-652822799-episode-012-alexa-skill-certification-with-sameer-lalwanilexa-dev-chat-final-mix.mp3");
-            return silentEcho.message("quit");
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-012");
+            return alexa.utter("previous")
+
         }).then((result) => {
-            console.log("JSON: " + JSON.stringify(result));
+            assert.include(result.response.directives[0].audioItem.stream.url, "episode-013");
             done();
+
         }).catch((e) => {
             assert.fail(e, "This should not have happened");
         });
