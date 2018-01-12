@@ -21,8 +21,6 @@ describe("SimpleAudioPlayerTest", function() {
             assert.isDefined(result.response.outputSpeech.ssml);
             assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
             done();
-        }).catch((e) => {
-            fail(e);
         });
     });
 
@@ -52,8 +50,6 @@ describe("SimpleAudioPlayerTest", function() {
         }).then((result) => {
             assert.include(alexa.audioPlayer().playing().stream.url, "episode-011");
             done();
-        }).catch((e) => {
-            assert.fail(e, "This should not have happened");
         });
     });
 

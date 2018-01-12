@@ -28,12 +28,12 @@ npm install
 ## Writing the Unit Tests
 Here is a really simple automated test with Silent Echo:
 ```javascript
-    alexa.launch().then((result) => {
-        assert.isDefined(result.response.outputSpeech.ssml);
-        assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
-        done();
-    }).catch((e) => {
-        fail(e);
+    it("Opens the Skill", function(done) {
+        alexa.launch().then((result) => {
+            assert.isDefined(result.response.outputSpeech.ssml);
+            assert.include(result.response.outputSpeech.ssml, "Welcome to the Simple Audio Player");
+            done();
+        });
     });
 ```
 
